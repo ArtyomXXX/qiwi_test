@@ -9,12 +9,12 @@ fetch('https://www.cbr-xml-daily.ru/daily_json.js')
 
         // Создаем варианты для селектора
         for (const currencyId in currencies) {
-            const currency = currencies[currencyId];
-            const option = document.createElement('option');
-            option.value = currencyId;
-            option.text = `${currencyId} - ${currency.Name}`;
-            currencySelector.appendChild(option);
-        }
+          const currency = currencies[currencyId];
+          const option = document.createElement('option');
+          option.value = currencyId;
+          option.text = `${currencyId} - ${currency.Name}`;
+          currencySelector.appendChild(option);
+        }   
 
         // Функция для обновления информации о выбранной валюте
         function updateCurrencyInfo() {
@@ -29,9 +29,11 @@ fetch('https://www.cbr-xml-daily.ru/daily_json.js')
                 <p>ID валюты: ${selectedCurrency.ID}</p>
                 <p>Название валюты: ${selectedCurrency.Name}</p>
                 <p>Код валюты: ${selectedCurrency.CharCode}</p>
-                <p>${formattedDate} - ${selectedCurrency.Value.toFixed(2)}</p>
-                <p>${formattedDate} - ${selectedCurrency.Previous.toFixed(2)}</p>
+                <p>${formattedDate} - ${selectedCurrency.Value.toFixed(4)}</p>
+                <p>${formattedDate} - ${selectedCurrency.Previous.toFixed(4)}</p>
             `;
+            
+            currencyInfo.style.display = 'block';
         }
 
         // Вызываем функцию обновления информации о выбранной валюте при изменении значения селектора
