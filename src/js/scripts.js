@@ -21,7 +21,7 @@ fetch('https://www.cbr-xml-daily.ru/daily_json.js')
             const selectedCurrencyId = currencySelector.value;
             const selectedCurrency = currencies[selectedCurrencyId];
 
-            const date = new Date(data.Timestamp);
+            const date = new Date(data.PreviousDate);
             const formattedDate = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}, ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 
             currencyInfo.innerHTML = `
@@ -32,7 +32,7 @@ fetch('https://www.cbr-xml-daily.ru/daily_json.js')
                 <p>${formattedDate} - ${selectedCurrency.Value.toFixed(4)}</p>
                 <p>${formattedDate} - ${selectedCurrency.Previous.toFixed(4)}</p>
             `;
-            
+
             currencyInfo.style.display = 'block';
         }
 
