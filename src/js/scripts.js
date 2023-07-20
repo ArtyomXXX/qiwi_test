@@ -1,45 +1,45 @@
-// Функция для получения данных с API
-async function getCurrencyData() {
-  try {
-    const response = await fetch('https://www.cbr-xml-daily.ru/daily_json.js');
-    const data = await response.json();
-    return data.Valute;
-  } catch (error) {
-    console.log('Ошибка при получении данных:', error);
-    return null;
-  }
-}
+const currencySelector = document.getElementById('currency-selector');
+const currencyInfo = document.getElementById('currency-info');
 
-// Функция для создания и заполнения селектора валют
-async function populateCurrencySelector() {
-  const currencySelector = document.getElementById('currency-select');
-  const currencyData = await getCurrencyData();
-  
-  if (currencyData) {
-    Object.keys(currencyData).forEach((currencyId) => {
-      const option = document.createElement('option');
-      option.value = currencyId;
-      option.textContent = `${currencyId} - ${currencyData[currencyId].Name}`;
-      currencySelector.appendChild(option);
+fetch('https://www.cbr-xml-daily.ru/daily_json.js')
+    .then(response => response.json())
+    .then(data => {
+        // Получаем объект с информацией о курсе валют
+        const currencies = data.Valute;
+
+        // Создаем варианты для селектора
+        for (const currencyId in currencies) {
+            const currency = currencies[currencyId];
+            const option = document.createElement('option');
+            option.value = currencyId;
+            option.text = `${currencyId} - ${currency.Name}`;
+            currencySelector.appendChild(option);
+        }
+
+        // Функция для обновления информации о выбранной валюте
+        function updateCurrencyInfo() {
+            const selectedCurrencyId = currencySelector.value;
+            const selectedCurrency = currencies[selectedCurrencyId];
+
+            const date = new Date(data.Timestamp);
+            const formattedDate = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}, ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+
+            currencyInfo.innerHTML = `
+                <h3>Информация о выбранной валюте:</h3>
+                <p>ID валюты: ${selectedCurrency.ID}</p>
+                <p>Название валюты: ${selectedCurrency.Name}</p>
+                <p>Код валюты: ${selectedCurrency.CharCode}</p>
+                <p>${formattedDate} - ${selectedCurrency.Value.toFixed(2)}</p>
+                <p>${formattedDate} - ${selectedCurrency.Previous.toFixed(2)}</p>
+            `;
+        }
+
+        // Вызываем функцию обновления информации о выбранной валюте при изменении значения селектора
+        currencySelector.addEventListener('change', updateCurrencyInfo);
+
+        // Вызываем функцию обновления информации о выбранной валюте для первоначального значения
+        updateCurrencyInfo();
+    })
+    .catch(error => {
+        console.error('Ошибка получения данных о курсе валют', error);
     });
-
-    currencySelector.addEventListener('change', () => {
-      const selectedCurrencyId = currencySelector.value;
-      const selectedCurrency = currencyData[selectedCurrencyId];
-
-      // Обновление блока информации
-      document.getElementById('info-id').textContent = selectedCurrency.ID;
-      document.getElementById('info-name').textContent = selectedCurrency.Name;
-      document.getElementById('info-code').textContent = selectedCurrency.CharCode;
-      document.getElementById('info-date').textContent = selectedCurrency.Date;
-      document.getElementById('info-value').textContent = selectedCurrency.Value;
-      document.getElementById('prev-info-date').textContent = selectedCurrency.PreviousDate;
-      document.getElementById('prev-info-value').textContent = selectedCurrency.PreviousURL;
-    });
-  } else {
-    currencySelector.innerHTML = '<p>Выберите валюту из списка.</p>';
-}
-}
-
-  // Запуск функции для заполнения селектора при загрузке страницы
-  populateCurrencySelector();

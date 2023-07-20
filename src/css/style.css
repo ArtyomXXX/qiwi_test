@@ -67,21 +67,17 @@ select {
 }
 
 .currency-selector {
-    width: 360px;
+
     border: 1px solid #808080;
     border-radius: 5px;
     margin-bottom: 20px;
     padding: 5px;
 }
 
-.currency-select {
-    border: 1px solid #000000;
-}
-
 .currency-info {
     width: 400px;
     border: 1px solid #000000;
     border-radius: 5px;
-    padding: 30px 20px;
+    padding: 20px 20px;
     box-shadow: 12px 12px 5px 2px rgb(175, 170, 224);
 }
